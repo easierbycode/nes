@@ -51,6 +51,33 @@ var currentSample = 0;
 // Load ROM + Start emulator
 // =========================
 
+const createNES = () => {
+  var nes = new jsnes.NES({
+      
+    // Display each new frame on the canvas
+    onFrame: function(frameBuffer){
+      var i = 0;
+      for(var y = 0; y < 256; ++y){
+        for(var x = 0; x < 240; ++x){
+          i = y * 256 + x;
+          frameBuffer32[i] = 0xff000000 | frameBuffer[i];
+        }
+      }
+      imageData.data.set(frameBuffer8);
+      ctx.putImageData(imageData, 0, 0);
+    },
+    
+    // Add new audio samples to the Audio buffers
+    onAudioSample: function(left, right){
+      leftSamples.push(left);
+      rightSamples.push(right);
+    },
+    
+    // Pass the browser's sample rate to the emulator
+    sampleRate: 44100,
+  });
+}
+
 file.onchange = () => {
   var fileReader = new FileReader();
   fileReader.readAsBinaryString(file.files[0]);
@@ -58,30 +85,7 @@ file.onchange = () => {
   
     file.remove();
   
-    var nes = new jsnes.NES({
-      
-      // Display each new frame on the canvas
-      onFrame: function(frameBuffer){
-        var i = 0;
-        for(var y = 0; y < 256; ++y){
-          for(var x = 0; x < 240; ++x){
-            i = y * 256 + x;
-            frameBuffer32[i] = 0xff000000 | frameBuffer[i];
-          }
-        }
-        imageData.data.set(frameBuffer8);
-        ctx.putImageData(imageData, 0, 0);
-      },
-      
-      // Add new audio samples to the Audio buffers
-      onAudioSample: function(left, right){
-        leftSamples.push(left);
-        rightSamples.push(right);
-      },
-      
-      // Pass the browser's sample rate to the emulator
-      sampleRate: 44100,
-    });
+    createNES();
 
     // Send ROM to emulator
     nes.loadROM(fileReader.result);
@@ -132,6 +136,7 @@ document.getElementsByClassName('rom')[0].addEventListener('click', () => {
   file.overrideMimeType("text/plain; charset=x-user-defined");
   file.send();
   file.onload = function(){
+    createNES();
     nes.loadROM(file.responseText);
     setInterval(nes.frame, 16);
   }
