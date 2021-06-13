@@ -3,6 +3,10 @@
 <canvas id=canvas width=256 height=240 style="background: #000"></canvas>
 <br><b>Controls</b>: arrow keys + X + C + Start + Esc
 <br><input type=file id=file>
+<b>.: or :.</b>
+<a class='rom' href='#'>
+  Mitsume ga Tooru (J) [T-Eng1.01]
+</a>
 <style>
 body { font: 14px Arial }
 canvas { background: #000; height: calc(100vmin - 60px); width: calc((100vmin - 60px) * 1.067); image-rendering: crisp-edges; image-rendering: pixelated; }
@@ -119,4 +123,17 @@ file.onload = function(){
   setInterval(nes.frame, 16);
 }
 */
+
+
+document.getElementsByClassName('rom')[0].addEventListener('click', () => {
+  filename = "roms/Mitsume ga Tooru (J) [T-Eng1.01].nes";
+  file = new XMLHttpRequest;
+  file.open('GET', filename);
+  file.overrideMimeType("text/plain; charset=x-user-defined");
+  file.send();
+  file.onload = function(){
+    nes.loadROM(file.responseText);
+    setInterval(nes.frame, 16);
+  }
+});
 </script>
