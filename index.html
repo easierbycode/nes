@@ -52,7 +52,7 @@ var currentSample = 0;
 // =========================
 
 const createNES = () => {
-  var nes = new jsnes.NES({
+  return new jsnes.NES({
       
     // Display each new frame on the canvas
     onFrame: function(frameBuffer){
@@ -85,7 +85,7 @@ file.onchange = () => {
   
     file.remove();
   
-    createNES();
+    var nes = createNES();
 
     // Send ROM to emulator
     nes.loadROM(fileReader.result);
@@ -136,7 +136,7 @@ document.getElementsByClassName('rom')[0].addEventListener('click', () => {
   file.overrideMimeType("text/plain; charset=x-user-defined");
   file.send();
   file.onload = function(){
-    createNES();
+    var nes = createNES();
     nes.loadROM(file.responseText);
     setInterval(nes.frame, 16);
   }
