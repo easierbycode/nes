@@ -4,6 +4,6 @@ A browser UI for [JSNES](https://github.com/bfirsh/jsnes), in the form of a tiny
 
 Forked from: https://github.com/bfirsh/jsnes-web
 
-Demo: https://xem.github.io/jsnes-web
+Demo: http://codemonkey.games/nes
 
-Minified: https://xem.github.io/jsnes-web/index.min.html
+Minified: http://codemonkey.games/nes/index.min.html
